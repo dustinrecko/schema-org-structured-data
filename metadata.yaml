@@ -16,5 +16,8 @@ homepage: "https://www.omr.ruhr"
 documentation: "https://github.com/dustinrecko/schema-org-structured-data/blob/master/README.md"
 versions:
 # Latest Version
+- sha: 6270b881842fd49cf30e0d891addf20d73fa8d6e
+  changeNotes: Fixing issues with breadcrumbs and sameAs structures
+# Older versions
 - sha: 87d4ab1a94fe1e79555c9f949158d60567a13c7c
   changeNotes: Initial Version
