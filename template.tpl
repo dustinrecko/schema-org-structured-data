@@ -72,7 +72,7 @@ ___TEMPLATE_PARAMETERS___
       },
       {
         "displayName": "Is same as (Social and other profiles, e.g. Facebook, Wikiepedia, ...)",
-        "name": "organization.sameAs",
+        "name": "organization.sameAs][",
         "simpleTableColumns": [
           {
             "defaultValue": "",
@@ -349,7 +349,7 @@ ___TEMPLATE_PARAMETERS___
       },
       {
         "displayName": "Is same as (Social and other profiles, e.g. Facebook, Wikiepedia, ...)",
-        "name": "person.sameAs",
+        "name": "person.sameAs][",
         "simpleTableColumns": [
           {
             "defaultValue": "",
@@ -761,10 +761,20 @@ const utils = {
       }
       return acc;
     }, []),
-    getProp: (fieldName) => fieldName.split('#').shift().split('.').pop().replace('[]',''),
+    getProp: (fieldName) => fieldName.split('#').shift().split('.').pop().replace('[]','').replace('][',''),
     getNodeLink: (fieldName) => fieldName.split('#').length > 1 && fieldName.split('#').pop(),
     isArray: (fieldName) => fieldName.substring(fieldName.length-2) === '[]',
+    isSimpleArray: (fieldName) => fieldName.substring(fieldName.length-2) === '][',
     isMetaField: (fieldName) => fieldName[0] === '_',
+  },
+  
+  getObjectKeys: (object) => {
+    const keys = [];
+    for (let key in object) {
+      keys.push(key);
+    }
+    
+    return keys;
   },
   
   stripGtmFields: (data) => {
@@ -961,6 +971,7 @@ const schema = {
       const type = config.getType(path).name || prop;
       const value = sourceObject[fieldName];
       const isFirstLevel = path.length === 0;
+      let key;
       let shift = 0;
 
       if (typeof(sourceObject[type+'._isActive']) !== 'undefined' && !sourceObject[type+'._isActive']) {
@@ -993,6 +1004,14 @@ const schema = {
           // If not firt level, hydrate all array elements and assign array in needed location
           nested[prop] = sourceObject[fieldName].map(obj => schema.hydrate(obj, resultObject));
         }
+        
+        continue;
+      }
+      
+      // Transform cell-based layout to simple array if needed
+      if (utils.fields.isSimpleArray(fieldName)) {
+        key = value[0] && utils.getObjectKeys(value[0])[0];
+        nested[prop] = key && value.map(obj => obj[key]);
         
         continue;
       }
