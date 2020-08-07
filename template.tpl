@@ -12,7 +12,9 @@ ___INFO___
   "displayName": "Schema.org Structured Data",
   "description": "The variable returns a JSON object which represents a Structured Data Graph as per the configuration of the variable in a given GTM container.",
   "securityGroups": [],
-  "categories": ["MARKETING"],
+  "categories": [
+    "MARKETING"
+  ],
   "id": "cvt_temp_public_id",
   "type": "MACRO",
   "version": 1,
@@ -293,13 +295,13 @@ ___TEMPLATE_PARAMETERS___
           {
             "defaultValue": "",
             "displayName": "Name",
-            "name": "itemListElement.item.name",
+            "name": "itemListElement.name",
             "type": "TEXT"
           },
           {
             "defaultValue": "",
             "displayName": "URL (Canonical)",
-            "name": "itemListElement.item.url",
+            "name": "itemListElement.item",
             "type": "TEXT"
           }
         ],
@@ -821,15 +823,11 @@ const config = {
     breadcrumb: {
       required: ['itemListElement'],
       mapping: "BreadcrumbList",
+      id: 'url',
     },
     itemListElement: {
-      required: [],
+      required: ['item','name'],
       mapping: "ListItem",
-    },
-    "itemListElement.item": {
-      required: [],
-      mapping: 'WebPage',
-      name: 'item',
     },
     product: {
       required: ['name'],
